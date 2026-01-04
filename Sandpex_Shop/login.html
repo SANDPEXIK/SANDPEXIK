@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Sandpex Shop</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --neon-blue: #2997ff; --neon-purple: #0a84ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; background: var(--bg); color: #f5f5f7; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        .bg-3d { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(41, 151, 255, 0.15) 0%, transparent 60%); z-index: 0; }
+        @keyframes float3d { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .auth-card {
+            background: #1c1c1e; backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px;
+            padding: 3rem; width: 100%; max-width: 450px; position: relative; z-index: 10;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); animation: cardAppear 0.8s ease-out;
+        }
+        @keyframes cardAppear { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-neon { font-size: 2rem; font-weight: 700; color: #fff; text-align: center; margin-bottom: 0.5rem; letter-spacing: -1px; }
+        .subtitle { text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-input { width: 100%; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 1rem; transition: 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--neon-blue); background: rgba(41, 151, 255, 0.05); }
+
+        .btn-primary { background: var(--neon-blue); color: #fff; width: 100%; padding: 1rem; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; font-size: 1rem; margin-top: 1rem; }
+        .btn-primary:hover { background: var(--neon-purple); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(41, 151, 255, 0.3); }
+
+        .social-login { margin-top: 2rem; text-align: center; }
+        .social-label { color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-bottom: 1rem; position: relative; }
+        .social-label::before, .social-label::after { content: ''; position: absolute; top: 50%; width: 30%; height: 1px; background: rgba(255,255,255,0.1); }
+        .social-label::before { left: 0; } .social-label::after { right: 0; }
+
+        .social-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .social-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; color: #fff; font-size: 1.2rem; }
+        .social-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+        .social-btn.vk:hover { color: #0077FF; border-color: #0077FF; }
+        .social-btn.google:hover { color: #DB4437; border-color: #DB4437; }
+        .social-btn.telegram:hover { color: #0088cc; border-color: #0088cc; }
+        .social-btn.tiktok:hover { color: #ff0050; border-color: #ff0050; text-shadow: 2px 2px 0px #00f2ea; }
+
+        .links { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; }
+        .links a { color: var(--neon-blue); text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="bg-3d"></div>
+
+    <div class="auth-card">
+        <h1 class="logo-neon">SANDEX SHOP</h1>
+        <p class="subtitle">С возвращением!</p>
+
+        <form onsubmit="event.preventDefault(); login();">
+            <div class="form-group">
+                <input type="text" class="form-input" id="loginUser" placeholder="Email или Telegram" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="loginPass" placeholder="Пароль" required>
+            </div>
+            
+            <button type="submit" class="btn-primary">Войти</button>
+        </form>
+
+        <div class="social-login">
+            <div class="social-label">или войти через</div>
+            <div class="social-buttons">
+                <button class="social-btn vk" onclick="socialAuth('VK')"><i class="fab fa-vk"></i></button>
+                <button class="social-btn google" onclick="socialAuth('Google')"><i class="fab fa-google"></i></button>
+                <button class="social-btn telegram" onclick="socialAuth('Telegram')"><i class="fab fa-telegram"></i></button>
+                <button class="social-btn tiktok" onclick="socialAuth('TikTok')"><i class="fab fa-tiktok"></i></button>
+            </div>
+        </div>
+
+        <div class="links">
+            Нет аккаунта? <a href="register.html">Зарегистрироваться</a><br>
+            <a href="Сайт.html" style="color: rgba(255,255,255,0.5); margin-top: 10px; display: inline-block;">← Вернуться в магазин</a>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            
+            const users = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+            const u = users.find(x => x.user === user && x.pass === pass);
+            
+            if (!u) {
+                alert('❌ Неверный логин или пароль');
+                return;
+            }
+            
+            localStorage.setItem('sandex_user', JSON.stringify({ user: u.user, name: u.name || u.user }));
+            window.location.href = 'Сайт.html';
+        }
+
+        function socialAuth(provider) {
+            // Имитация входа через соцсети
+            const mockUser = {
+                user: `user_${provider.toLowerCase()}@example.com`,
+                name: `${provider} User`,
+                pass: 'social_login'
+            };
+            
+            // Сохраняем "фейкового" пользователя, если его нет
+            const users = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+            if(!users.find(u => u.user === mockUser.user)) {
+                users.push(mockUser);
+                localStorage.setItem('sandex_users', JSON.stringify(users));
+            }
+            
+            localStorage.setItem('sandex_user', JSON.stringify({ user: mockUser.user, name: mockUser.name }));
+            alert(`✅ Успешный вход через ${provider}!`);
+            window.location.href = 'Сайт.html';
+        }
+    </script>
+</body>
+</html>

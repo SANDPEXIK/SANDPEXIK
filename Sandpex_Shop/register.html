@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Sandpex Shop</title>
+<link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+    <style>
+        /* ============================================
+           ПРЕМИУМ СТИЛИ РЕГИСТРАЦИИ С 3D
+        ============================================ */
+        :root {
+            --neon-blue: #2997ff; /* Apple Blue */
+            --neon-purple: #0a84ff; /* Darker Blue */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            background: #000000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 3D Background эффекты */
+        .bg-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(41, 151, 255, 0.15) 0%, transparent 60%);
+        }
+        
+        @keyframes float3d {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .floating-iphone {
+            position: absolute;
+            width: 300px;
+            height: 600px;
+            background: url('https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-black-titanium-select-202309?wid=512&hei=512&fmt=jpeg&qlt=90') center/cover no-repeat;
+            border-radius: 40px;
+            transform: rotate(25deg);
+            right: -100px;
+            top: 20%;
+            box-shadow: 0 0 100px rgba(41, 151, 255, 0.2);
+            border: 4px solid #1a1a1a;
+        }
+        
+        .auth-card {
+            background: #1c1c1e;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: cardAppear 0.8s ease-out;
+        }
+        
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-neon {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+        
+        .auth-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .auth-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .step.active {
+            background: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(41, 151, 255, 0.4);
+            border-color: white;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .step.completed {
+            background: #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+            color: #000;
+        }
+        
+        .step-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+        }
+        
+        .step.active .step-label {
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+        
+        /* Формы */
+        .auth-form {
+            display: none;
+            animation: formSlide 0.5s ease-out;
+        }
+        
+        @keyframes formSlide {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(41, 151, 255, 0.2);
+            background: rgba(41, 151, 255, 0.05);
+        }
+        
+        .form-input.error {
+            border-color: #ff4757;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.2);
+        }
+        
+        .form-input.success {
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+        
+        .error-message {
+            color: #ff4757;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Капча */
+        .captcha-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(41, 151, 255, 0.2);
+        }
+        
+        .captcha-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .captcha-code {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 10px;
+            text-align: center;
+            color: var(--neon-blue);
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+        
+        .captcha-refresh {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--neon-blue);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .captcha-refresh:hover {
+            transform: rotate(180deg);
+            box-shadow: 0 0 30px rgba(41, 151, 255, 0.5);
+        }
+        
+        /* Кнопки */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--neon-blue);
+            color: #fff;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(41, 151, 255, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(41, 151, 255, 0.2);
+        }
+        
+        /* Код подтверждения */
+        .verification-code {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .code-input {
+            width: 100%;
+            aspect-ratio: 1;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .code-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(41, 151, 255, 0.2);
+            background: rgba(41, 151, 255, 0.05);
+        }
+        
+        .code-input.filled {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+        
+        /* Таймер */
+        .timer {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+        }
+        
+        .timer.expired {
+            color: #ff4757;
+        }
+        
+        /* Уведомление о письме */
+        .email-notification {
+            background: rgba(41, 151, 255, 0.1);
+            border: 1px solid rgba(41, 151, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .email-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Успешная регистрация */
+        .success-screen {
+            text-align: center;
+            padding: 2rem 0;
+            animation: successAppear 1s ease-out;
+        }
+        
+        @keyframes successAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #00ff88;
+            margin-bottom: 2rem;
+            animation: bounce 1s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-30px);}
+            60% {transform: translateY(-15px);}
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .auth-card { padding: 2rem; }
+            .floating-iphone { display: none; }
+            .verification-code { gap: 0.5rem; }
+            .code-input { font-size: 1.2rem; }
+        }
+
+        /* Новые стили из руководства */
+        .social-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .social-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-blue);
+            transform: translateY(-2px);
+        }
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .password-strength { margin-top: 8px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .strength-bar { height: 100%; width: 0; transition: width 0.3s, background-color 0.3s; }
+        .strength-label { font-size: 0.8rem; margin-top: 4px; text-align: right; color: rgba(255,255,255,0.5); min-height: 1.2em; }
+        
+        .input-wrapper { position: relative; }
+        .validation-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #00ff88; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .input-wrapper.valid .validation-icon { opacity: 1; }
+        .input-wrapper.valid .form-input { border-color: #00ff88; }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- 3D Background -->
+        <div class="bg-3d"></div>
+        
+        <!-- Карточка регистрации -->
+        <div class="auth-card">
+            <!-- Шаги -->
+            <div class="auth-steps">
+                <div class="step active" data-step="1">
+                    <span>1</span>
+                    <div class="step-label">Данные</div>
+                </div>
+                <div class="step" data-step="2">
+                    <span>2</span>
+                    <div class="step-label">Подтверждение</div>
+                </div>
+                <div class="step" data-step="3">
+                    <span>3</span>
+                    <div class="step-label">Готово</div>
+                </div>
+            </div>
+            
+            <!-- Шаг 1: Основные данные -->
+            <form class="auth-form active" id="step1" data-step="1">
+                <div class="auth-header">
+                    <h1 class="logo-neon">SANDEX SHOP</h1>
+                    <p>Создайте аккаунт для покупок</p>
+                </div>
+                
+                <!-- Соцсети (OAuth) -->
+                <div class="social-buttons">
+                    <button type="button" class="social-btn" title="VK"><i class="fab fa-vk"></i></button>
+                    <button type="button" class="social-btn" title="Google"><i class="fab fa-google"></i></button>
+                    <button type="button" class="social-btn" title="Telegram"><i class="fab fa-telegram"></i></button>
+                    <button type="button" class="social-btn" title="TikTok"><i class="fab fa-tiktok"></i></button>
+                </div>
+                
+                <div class="divider">или через email</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <div class="input-wrapper">
+                        <input type="text" class="form-input" id="firstName" placeholder="Иван" required>
+                        <i class="fas fa-check validation-icon"></i>
+                    </div>
+                    <div class="error-message" id="firstNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email (Логин)</label>
+                    <div class="input-wrapper">
+                        <input type="email" class="form-input" id="email" placeholder="ivan@example.com" required>
+                        <i class="fas fa-check validation-icon"></i>
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-input" id="password" placeholder="Минимум 8 символов" required>
+                        <i class="fas fa-check validation-icon"></i>
+                    </div>
+                    <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
+                    <div class="strength-label" id="strengthText"></div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Повторите пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="Повторите пароль" required>
+                        <i class="fas fa-check validation-icon"></i>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="terms" required>
+                        Я согласен с правилами магазина
+                    </label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="nextStep()">
+                    Продолжить
+                </button>
+                
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.6); margin-top: 2rem;">
+                    Уже есть аккаунт? 
+                    <a href="login.html" style="color: var(--neon-blue); text-decoration: none;">Войти</a>
+                </p>
+            </form>
+            
+            <!-- Шаг 3: Подтверждение email -->
+            <form class="auth-form" id="step2" data-step="2">
+                <div class="auth-header">
+                    <h1 class="logo-neon">📧 Подтверждение</h1>
+                    <p>Мы отправили код на вашу почту</p>
+                </div>
+                
+                <div class="email-notification">
+                    <div class="email-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h3 id="userEmailDisplay">ivan@example.com</h3>
+                    <p>Проверьте папку "Входящие" или "Спам"</p>
+                </div>
+                
+                <div class="verification-code">
+                    <input type="text" class="code-input" maxlength="1" data-index="0">
+                    <input type="text" class="code-input" maxlength="1" data-index="1">
+                    <input type="text" class="code-input" maxlength="1" data-index="2">
+                    <input type="text" class="code-input" maxlength="1" data-index="3">
+                    <input type="text" class="code-input" maxlength="1" data-index="4">
+                    <input type="text" class="code-input" maxlength="1" data-index="5">
+                </div>
+                
+                <div class="timer" id="timer">02:00</div>
+                
+                <button type="button" class="btn btn-primary" onclick="verifyEmailCode()">
+                    <span class="btn-text">Подтвердить</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline" onclick="resendCode()">
+                    <i class="fas fa-redo"></i>
+                    Отправить код повторно
+                </button>
+                
+                <button type="button" class="btn btn-outline" onclick="prevStep()">
+                    Назад
+                </button>
+            </form>
+            
+            <!-- Шаг 4: Успешная регистрация -->
+            <div class="auth-form" id="step3" data-step="3">
+                <div class="success-screen">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <h1 class="logo-neon">🎉 Готово!</h1>
+                    
+                    <p style="color: rgba(255, 255, 255, 0.8); margin: 2rem 0;">
+                        Ваш аккаунт успешно создан.
+                    </p>
+
+                    <div style="background: rgba(41, 151, 255, 0.1); border: 1px solid var(--neon-blue); padding: 15px; border-radius: 12px; margin-bottom: 2rem;">
+                        <p style="margin:0; font-size:0.9rem; color:var(--neon-blue);">🎁 Подарок за регистрацию:</p>
+                        <p style="margin:5px 0 0 0; font-size:1.2rem; font-weight:bold; color:#fff;">Промокод: SANDPEXIK (-25%)</p>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="goToDashboard()">
+                        <i class="fas fa-rocket"></i>
+                        Перейти в магазин
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // КОНФИГУРАЦИЯ
+        const CONFIG = {
+            VERIFICATION_CODE_LENGTH: 6,
+            RESEND_TIMEOUT: 120
+        };
+        
+        let currentStep = 1;
+        let verificationCode = '';
+        let timerInterval = null;
+        let timeLeft = CONFIG.RESEND_TIMEOUT;
+        let userData = {};
+        
+        // ОСНОВНЫЕ ФУНКЦИИ
+        function nextStep() {
+            if (!validateStep(currentStep)) return;
+            
+            const currentForm = document.querySelector(`[data-step="${currentStep}"]`);
+            const nextStepNum = currentStep + 1;
+            
+            currentForm.style.animation = 'formSlide 0.5s ease-out reverse';
+            setTimeout(() => {
+                currentForm.classList.remove('active');
+                const nextForm = document.querySelector(`[data-step="${nextStepNum}"]`);
+                nextForm.classList.add('active');
+                nextForm.style.animation = 'formSlide 0.5s ease-out';
+                
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
+                document.querySelector(`.step[data-step="${nextStepNum}"]`).classList.add('active');
+                
+                currentStep = nextStepNum;
+                
+                switch(currentStep) {
+                    case 2: 
+                        sendVerificationEmail(); 
+                        startTimer(); 
+                        break;
+                    case 3:
+                        saveUserData();
+                        break;
+                }
+            }, 300);
+        }
+        
+        function prevStep() {
+            if (currentStep <= 1) return;
+            const currentForm = document.querySelector(`[data-step="${currentStep}"]`);
+            const prevStepNum = currentStep - 1;
+            
+            currentForm.style.animation = 'formSlide 0.5s ease-out reverse';
+            setTimeout(() => {
+                currentForm.classList.remove('active');
+                const prevForm = document.querySelector(`[data-step="${prevStepNum}"]`);
+                prevForm.classList.add('active');
+                prevForm.style.animation = 'formSlide 0.5s ease-out';
+                
+                document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step[data-step="${prevStepNum}"]`).classList.add('active');
+                
+                currentStep = prevStepNum;
+                if (currentStep !== 2) stopTimer();
+            }, 300);
+        }
+        
+        // ВАЛИДАЦИЯ
+        function validateStep(step) {
+            let isValid = true;
+            if(step === 1) {
+                const name = document.getElementById('firstName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const pass = document.getElementById('password').value;
+                const confirm = document.getElementById('confirmPassword').value;
+                const terms = document.getElementById('terms').checked;
+                
+                // Улучшенная проверка email
+                const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const disposableDomains = ['tempmail.com', '10minutemail.com', 'mailinator.com', 'yopmail.com'];
+                const domain = email.split('@')[1];
+                
+                if(!name) { showError('firstNameError', 'Введите имя'); isValid=false; } else clearError('firstNameError');
+                if(!emailValid) { showError('emailError', 'Некорректный email'); isValid=false; }
+                else if(disposableDomains.includes(domain)) { showError('emailError', 'Временные почты запрещены'); isValid=false; }
+                else clearError('emailError');
+                
+                if(pass.length < 8) { showError('passwordError', 'Минимум 8 символов'); isValid=false; } else clearError('passwordError');
+                if(pass !== confirm) { showError('confirmPasswordError', 'Пароли не совпадают'); isValid=false; } else clearError('confirmPasswordError');
+                if(!terms) { showError('termsError', 'Нужно согласие'); isValid=false; } else clearError('termsError');
+                
+                // Проверка существования пользователя в базе Sandpex
+                const users = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+                if(users.find(u => u.user === email)) {
+                    showError('emailError', 'Этот email уже зарегистрирован');
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+        
+        // EMAIL (Имитация)
+        function sendVerificationEmail() {
+            const email = document.getElementById('email').value.trim();
+            document.getElementById('userEmailDisplay').textContent = email;
+            verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            // В демо режиме просто показываем код
+            alert(`[DEMO] Ваш код подтверждения: ${verificationCode}`);
+            console.log('Code:', verificationCode);
+        }
+        
+        // ВВОД КОДА
+        const inputs = document.querySelectorAll('.code-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value && index < inputs.length - 1) inputs[index + 1].focus();
+                if (e.target.value) input.classList.add('filled');
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) inputs[index - 1].focus();
+            });
+        });
+        
+        function verifyEmailCode() {
+            let code = '';
+            inputs.forEach(i => code += i.value);
+            if (code === verificationCode) {
+                nextStep();
+            } else {
+                alert('Неверный код');
+                inputs.forEach(i => i.value = '');
+                inputs[0].focus();
+            }
+        }
+        
+        // ТАЙМЕР
+        function startTimer() {
+            timeLeft = CONFIG.RESEND_TIMEOUT;
+            updateTimer();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) stopTimer();
+            }, 1000);
+        }
+        function stopTimer() { clearInterval(timerInterval); }
+        function updateTimer() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+            const s = (timeLeft % 60).toString().padStart(2,'0');
+            document.getElementById('timer').textContent = `${m}:${s}`;
+        }
+        function resendCode() {
+            if(timeLeft > 0 && timeLeft !== CONFIG.RESEND_TIMEOUT) return;
+            sendVerificationEmail();
+            startTimer();
+        }
+        
+        // СОХРАНЕНИЕ И ВЫХОД
+        function saveUserData() {
+            const email = document.getElementById('email').value.trim();
+            const name = document.getElementById('firstName').value.trim();
+            const pass = document.getElementById('password').value;
+            
+            // Сохраняем в базу Sandpex
+            const users = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+            const newUser = { user: email, name: name, pass: pass, points: 5000 };
+            users.push(newUser);
+            localStorage.setItem('sandex_users', JSON.stringify(users));
+            
+            // Автоматический вход
+            localStorage.setItem('sandex_user', JSON.stringify({ user: email, name: name }));
+        }
+        
+        function goToDashboard() {
+            window.location.href = 'Сайт.html';
+        }
+        
+        // Helpers
+        function showError(id, msg) { document.getElementById(id).textContent = msg; }
+        function clearError(id) { document.getElementById(id).textContent = ''; }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.auth-card').style.animation = 'cardAppear 0.8s ease-out';
+            
+            // Live Validation Listeners
+            document.getElementById('firstName').addEventListener('input', function() {
+                const valid = this.value.trim().length > 1;
+                this.parentElement.classList.toggle('valid', valid);
+                if(valid) clearError('firstNameError');
+            });
+            
+            document.getElementById('email').addEventListener('input', function() {
+                const email = this.value;
+                const basicValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const disposableDomains = ['tempmail.com', '10minutemail.com', 'mailinator.com', 'yopmail.com'];
+                const domain = email.split('@')[1];
+                const valid = basicValid && !disposableDomains.includes(domain);
+                
+                this.parentElement.classList.toggle('valid', valid);
+                if(valid) { clearError('emailError'); } else if (domain && disposableDomains.includes(domain)) { showError('emailError', 'Временные почты запрещены'); }
+            });
+            
+            document.getElementById('password').addEventListener('input', function() {
+                const val = this.value;
+                let score = 0;
+                if(val.length >= 8) score++;
+                if(/[A-Z]/.test(val)) score++;
+                if(/[0-9]/.test(val)) score++;
+                if(/[^A-Za-z0-9]/.test(val)) score++;
+                
+                const bar = document.getElementById('strengthBar');
+                const text = document.getElementById('strengthText');
+                const width = (score / 4) * 100;
+                
+                bar.style.width = width + '%';
+                if(score <= 1) { bar.style.backgroundColor = '#ff4757'; text.textContent = 'Слабый'; }
+                else if(score === 2) { bar.style.backgroundColor = '#ffa502'; text.textContent = 'Средний'; }
+                else if(score === 3) { bar.style.backgroundColor = '#2ed573'; text.textContent = 'Хороший'; }
+                else { bar.style.backgroundColor = '#00ff88'; text.textContent = 'Отличный'; }
+                
+                this.parentElement.classList.toggle('valid', score >= 3); // Require Good+
+                if(score >= 3) clearError('passwordError');
+            });
+            
+            document.getElementById('confirmPassword').addEventListener('input', function() {
+                const pass = document.getElementById('password').value;
+                const valid = this.value === pass && pass.length > 0;
+                this.parentElement.classList.toggle('valid', valid);
+                if(valid) clearError('confirmPasswordError');
+            });
+        });
+    </script>
+</body>
+</html>

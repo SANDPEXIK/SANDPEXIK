@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Аккаунт | Sandpex Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#000000; --card:#1c1c1e; --accent:#2997ff; --muted:#86868b; --text:#f5f5f7;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        
+        /* Header (Copy from Main) */
+        header{padding:18px 20px; display:flex; gap:12px; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.03); position: sticky; top: 0; z-index: 1000; background: rgba(5,6,10,0.8); backdrop-filter: blur(20px);}
+        .brand{display:flex; gap:12px; align-items:center; text-decoration: none; color: inherit;}
+        .logo{width:46px;height:46px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff; font-weight:700;}
+        .title{font-weight:700;font-size:18px}
+        .small{font-size:13px;color:var(--muted)}
+        .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:var(--accent);cursor:pointer; text-decoration: none; font-size: 14px;}
+        .btn.primary{background:var(--accent); color:#fff; border:none; font-weight: 600;}
+        
+        /* Main Content */
+        main { padding: 40px 20px; max-width: 1000px; margin: 0 auto; flex: 1; width: 100%; }
+        
+        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #0a84ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(41, 151, 255, 0.3);
+        }
+        .profile-info h1 { margin: 0; font-size: 2rem; }
+        .profile-info p { color: var(--muted); margin-top: 5px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; overflow-x: auto; }
+        .tab-btn { padding: 10px 20px; border-radius: 20px; background: transparent; color: var(--muted); border: none; cursor: pointer; font-size: 16px; transition: 0.3s; white-space: nowrap; }
+        .tab-btn.active { background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; }
+        .tab-btn:hover:not(.active) { color: #fff; }
+        
+        /* Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-value { font-size: 2rem; font-weight: 700; margin: 10px 0; }
+        .stat-label { color: var(--muted); font-size: 0.9rem; }
+        
+        /* Orders Table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .orders-table th, .orders-table td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .orders-table th {
+            background: rgba(255,255,255,0.02);
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(41, 151, 255, 0.15);
+            color: var(--accent);
+        }
+        
+        footer{padding:18px;text-align:center;color:var(--muted);font-size:13px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;}
+
+        @media (max-width: 768px) {
+            .profile-header { flex-direction: column; text-align: center; }
+            .orders-table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="Сайт.html" class="brand">
+          <div class="logo">S</div>
+          <div>
+            <div class="title">SANDEX SHOP</div>
+            <div class="small">Apple • Dyson • Consoles</div>
+          </div>
+        </a>
+        <div style="display:flex; gap:10px;">
+            <a href="Сайт.html" class="btn">В магазин</a>
+            <button onclick="logout()" class="btn" style="color:#ff4757; border-color:rgba(255,71,87,0.3)">Выйти</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-header">
+            <div class="avatar" id="userAvatar">U</div>
+            <div class="profile-info">
+                <h1 id="greeting">Привет!</h1>
+                <p id="userEmail">Загрузка...</p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard', this)">Обзор</button>
+            <button class="tab-btn" onclick="showTab('history', this)">История заказов</button>
+            <button class="tab-btn" onclick="showTab('settings', this)">Настройки</button>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Бонусные баллы</div>
+                    <div class="stat-value" style="color:var(--accent)" id="userPoints">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Всего заказов</div>
+                    <div class="stat-value" id="totalOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Потрачено</div>
+                    <div class="stat-value" id="totalSpent">0 ₸</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History View -->
+        <div id="historyView" style="display:none;">
+            <h3>История заказов</h3>
+            <table class="orders-table">
+                <thead><tr><th>ID Заказа</th><th>Дата</th><th>Сумма</th><th>Статус</th><th>Удалить</th></tr></thead>
+                <tbody id="recentOrdersTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settingsView" style="display:none;">
+            <div class="stat-card" style="max-width: 500px;">
+                <h3>🔐 Безопасность</h3>
+                <p class="stat-label" style="margin-bottom:1rem;">Смена пароля</p>
+                <button onclick="startResetFlow()" class="btn primary" style="width:100%;">Сбросить пароль</button>
+                
+                <div id="resetFlow" style="display:none; margin-top:1rem; flex-direction:column; gap:10px;">
+                    <input type="text" id="resetCode" placeholder="Код подтверждения" style="width:100%; padding:12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff;">
+                    <input type="password" id="resetNewPass" placeholder="Новый пароль" style="width:100%; padding:12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff;">
+                    <button onclick="finishReset()" class="btn primary">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © SANDEX SHOP — Все права защищены • Связь: <a href="https://t.me/c/3615687884/5" target="_blank" style="color:var(--accent); text-decoration:none;">@support</a>
+    </footer>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('sandex_user'));
+        if (!user) window.location.href = 'register.html';
+        
+        document.getElementById('greeting').innerText = `Привет, ${user.name || user.user}! 👋`;
+        document.getElementById('userEmail').innerText = user.user;
+        document.getElementById('userAvatar').innerText = (user.name || user.user)[0].toUpperCase();
+        
+        function renderOrders() {
+            const allOrders = JSON.parse(localStorage.getItem('sandex_orders') || '[]');
+            const allUsers = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+            const currentUserData = allUsers.find(u => u.user === user.user);
+            
+            const userOrders = allOrders.filter(o => o.user && o.user.user === user.user);
+            document.getElementById('totalOrders').innerText = userOrders.length;
+            document.getElementById('totalSpent').innerText = userOrders.reduce((sum, o) => sum + o.total, 0).toLocaleString() + ' ₸';
+            document.getElementById('userPoints').innerText = (currentUserData ? (currentUserData.points || 0) : 0).toLocaleString();
+            
+            const tableBody = document.getElementById('recentOrdersTable');
+            tableBody.innerHTML = '';
+            if (userOrders.length === 0) tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center">У вас пока нет заказов</td></tr>';
+            else userOrders.slice().reverse().forEach(o => tableBody.innerHTML += `<tr><td>#${o.id}</td><td>${new Date(o.created).toLocaleDateString()}</td><td>${o.total.toLocaleString()} ₸</td><td><span class="status-badge">${o.status}</span></td><td><button onclick="deleteOrder('${o.id}')" style="background:transparent;border:none;color:#ff4757;cursor:pointer"><i class="fas fa-trash"></i></button></td></tr>`);
+        }
+        renderOrders();
+
+        function deleteOrder(id) {
+            if(!confirm('Удалить этот заказ из истории?')) return;
+            let allOrders = JSON.parse(localStorage.getItem('sandex_orders') || '[]');
+            allOrders = allOrders.filter(o => o.id !== id);
+            localStorage.setItem('sandex_orders', JSON.stringify(allOrders));
+            renderOrders();
+        }
+
+        function logout() { localStorage.removeItem('sandex_user'); window.location.href = 'Сайт.html'; }
+
+        // Tabs logic
+        function showTab(tabName, btn) {
+            document.getElementById('dashboardView').style.display = tabName === 'dashboard' ? 'block' : 'none';
+            document.getElementById('historyView').style.display = tabName === 'history' ? 'block' : 'none';
+            document.getElementById('settingsView').style.display = tabName === 'settings' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            if(tabName === 'dashboard') renderOrders();
+        }
+
+        // Reset Password Flow
+        let generatedCode = null;
+        function startResetFlow() {
+            generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`[DEMO] Код отправлен на ${user.user}\nВаш код: ${generatedCode}`);
+            document.getElementById('resetFlow').style.display = 'flex';
+        }
+
+        function finishReset() {
+            const code = document.getElementById('resetCode').value;
+            const newP = document.getElementById('resetNewPass').value;
+
+            if(code !== generatedCode) { alert('Неверный код подтверждения'); return; }
+            if(newP.length < 8) { alert('Пароль слишком короткий'); return; }
+
+            const users = JSON.parse(localStorage.getItem('sandex_users') || '[]');
+            const currentUser = users.find(u => u.user === user.user);
+            currentUser.pass = newP;
+            localStorage.setItem('sandex_users', JSON.stringify(users));
+            
+            alert('Пароль сброшен и обновлен! ✅');
+            document.getElementById('resetFlow').style.display = 'none';
+            generatedCode = null;
+        }
+
+        // Load Theme
+        const savedAccent = localStorage.getItem('sandex_accent');
+        if(savedAccent) {
+            document.documentElement.style.setProperty('--accent', savedAccent);
+        }
+        const savedBg = localStorage.getItem('sandex_bg');
+        if(savedBg) {
+            document.documentElement.style.setProperty('--bg', savedBg);
+        }
+        const savedCard = localStorage.getItem('sandex_card');
+        if(savedCard) {
+            document.documentElement.style.setProperty('--card', savedCard);
+        }
+    </script>
+</body>
+</html>
